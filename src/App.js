@@ -5,12 +5,12 @@ import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function fetchMoviesHandler() {
+    setIsLoading(true);
     const response = await fetch("https://swapi.dev/api/films/"); // returns a promise
     const data = await response.json(); //do the transformation for JSON body to a JS object
-
-    
 
     // still async
     const transformMovies = data.results.map((movieData) => {
@@ -22,6 +22,7 @@ function App() {
       };
     });
     setMovies(transformMovies);
+    setIsLoading(false);
   }
 
   return (
@@ -30,7 +31,8 @@ function App() {
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={movies} />
+        {!isLoading && <MoviesList movies={movies} />}
+        {isLoading && <p>Loading</p>}
       </section>
     </React.Fragment>
   );
